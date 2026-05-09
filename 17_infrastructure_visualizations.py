@@ -1,6 +1,12 @@
 import sys
 import os
 
+import logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
 # Add parent directory to path to import plot_style
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from plot_style import set_tufte_defaults, apply_tufte_style, save_tufte_figure, COLORS
@@ -114,13 +120,13 @@ def create_main_visualization():
     """
     Create t-SNE projection of DINOv2 embeddings showing cluster structure.
     """
-    print("Generating main visualization...")
+    logger.info("Generating main visualization...")
     
     # Generate embeddings
     embeddings, labels, anomaly_scores = generate_embeddings_with_structure(n_images=10000)
     
     # Reduce to 2D with t-SNE
-    print("  Running t-SNE dimensionality reduction...")
+    logger.info("  Running t-SNE dimensionality reduction...")
     tsne = TSNE(n_components=2, random_state=42, perplexity=30, max_iter=1000)
     embeddings_2d = tsne.fit_transform(embeddings)
     
@@ -195,14 +201,14 @@ def create_main_visualization():
                 dpi=300, bbox_inches='tight')
     plt.close()
     
-    print(f"✓ Main visualization saved")
-    print(f"  t-SNE projection with {n_outliers} outliers flagged")
+    logger.info(f"✓ Main visualization saved")
+    logger.info(f"  t-SNE projection with {n_outliers} outliers flagged")
 
 def create_anomaly_distribution_visualization():
     """
     Create histogram of anomaly scores with threshold marking.
     """
-    print("Generating anomaly distribution visualization...")
+    logger.info("Generating anomaly distribution visualization...")
     
     # Generate embeddings and scores
     embeddings, labels, anomaly_scores = generate_embeddings_with_structure(n_images=10000)
@@ -273,13 +279,13 @@ def create_anomaly_distribution_visualization():
                 dpi=300, bbox_inches='tight')
     plt.close()
     
-    print(f"✓ Anomaly distribution visualization saved")
+    logger.info(f"✓ Anomaly distribution visualization saved")
 
 def create_performance_metrics_visualization():
     """
     Create bar chart showing review workload reduction and detection performance.
     """
-    print("Generating performance metrics visualization...")
+    logger.info("Generating performance metrics visualization...")
     
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
     
@@ -342,29 +348,29 @@ def create_performance_metrics_visualization():
                 dpi=300, bbox_inches='tight')
     plt.close()
     
-    print(f"✓ Performance metrics visualization saved")
+    logger.info(f"✓ Performance metrics visualization saved")
 
 def main():
     """Generate all visualizations for Blog 17."""
     set_tufte_defaults()
-    print("="*70)
-    print("Blog 17: Infrastructure Inspection - DINOv2 Visualizations")
-    print("="*70)
-    print()
+    logger.info("="*70)
+    logger.info("Blog 17: Infrastructure Inspection - DINOv2 Visualizations")
+    logger.info("="*70)
+    logger.info()
     
     create_main_visualization()
     create_anomaly_distribution_visualization()
     create_performance_metrics_visualization()
     
-    print()
-    print("="*70)
-    print("All visualizations generated successfully!")
-    print("="*70)
-    print()
-    print("Files created:")
-    print("  - 17_infrastructure_inspection_dinov2_main.png")
-    print("  - 17_infrastructure_anomaly_distribution.png")
-    print("  - 17_infrastructure_performance.png")
+    logger.info()
+    logger.info("="*70)
+    logger.info("All visualizations generated successfully!")
+    logger.info("="*70)
+    logger.info()
+    logger.info("Files created:")
+    logger.info("  - 17_infrastructure_inspection_dinov2_main.png")
+    logger.info("  - 17_infrastructure_anomaly_distribution.png")
+    logger.info("  - 17_infrastructure_performance.png")
 
 if __name__ == "__main__":
     main()

@@ -1,136 +1,60 @@
+---
+author: "Kyle Jones"
+date_published: "November 6, 2025"
+date_exported_from_medium: "November 10, 2025"
+canonical_link: "https://medium.com/@kyle-t-jones/inspection-infrastructure-for-anomalies-in-aerial-images-with-dinov2-362dfccd288d"
+---
+
 # Inspection Infrastructure for Anomalies in Aerial Images with DINOv2 Infrastructure operators --- pipelines, power lines, railways, mining
 haul roads--- collect millions of aerial images annually from drones...
 
 ### Inspection Infrastructure for Anomalies in Aerial Images with DINOv2
-Infrastructure operators --- pipelines, power lines, railways, mining
-haul roads--- collect millions of aerial images annually from drones,
-helicopters, and satellites. The collection rate exceeds review capacity
-by a factor of 100. Traditional computer vision requires labeled
-training data: thousands of images manually annotated with "corrosion,"
-"vegetation encroachment," "equipment present," "surface damage."
+Infrastructure operators --- pipelines, power lines, railways, mining haul roads--- collect millions of aerial images annually from drones, helicopters, and satellites. The collection rate exceeds review capacity by a factor of 100. Traditional computer vision requires labeled training data: thousands of images manually annotated with "corrosion," "vegetation encroachment," "equipment present," "surface damage."
 
-I wanted to see if self-supervised models like DINOv2 (Distillation with
-NO labels v2) could eliminate this bottleneck by learning visual
-representations from unlabeled data, then detecting anomalies as
-deviations from learned normal patterns.
+I wanted to see if self-supervised models like DINOv2 (Distillation with NO labels v2) could eliminate this bottleneck by learning visual representations from unlabeled data, then detecting anomalies as deviations from learned normal patterns.
 
-DINOv2 is a computer vision model from Meta AI trained on 142 million
-unlabeled images. It learns that power line towers look similar to each
-other, vegetation has consistent texture patterns, bare ground differs
-from disturbed soil, and construction equipment stands out against
-infrastructure backgrounds. When deployed on operational imagery,
-embeddings from normal scenes cluster tightly; anomalies--- corrosion,
-encroachment, damage, unauthorized activity --- appear as outliers in
-384-dimensional embedding space.
+DINOv2 is a computer vision model from Meta AI trained on 142 million unlabeled images. It learns that power line towers look similar to each other, vegetation has consistent texture patterns, bare ground differs from disturbed soil, and construction equipment stands out against infrastructure backgrounds. When deployed on operational imagery, embeddings from normal scenes cluster tightly; anomalies--- corrosion, encroachment, damage, unauthorized activity --- appear as outliers in 384-dimensional embedding space.
 
 
 ### The Inspection Problem: Data Collection Outpaces Human Review
-Infrastructure inspection requirements vary by industry. Pipelines must
-comply with 49 CFR §195, which mandates aerial patrol monthly to
-annually depending on class location. Power transmission systems follow
-NERC FAC standards requiring annual inspection of all structures.
-Railways operate under FRA regulations that require biannual track
-inspection and annual bridge inspection. Mining operations conduct
-weekly to monthly haul road surveys to maintain operational safety.
+Infrastructure inspection requirements vary by industry. Pipelines must comply with 49 CFR §195, which mandates aerial patrol monthly to annually depending on class location. Power transmission systems follow NERC FAC standards requiring annual inspection of all structures. Railways operate under FRA regulations that require biannual track inspection and annual bridge inspection. Mining operations conduct weekly to monthly haul road surveys to maintain operational safety.
 
 For a 10,000 km pipeline network with 500m ROW buffer:
 
-The area monitored spans 10,000 km × 1 km, totaling 10,000 km². At 0.5m
-resolution, this coverage area translates to 40 billion pixels. When
-divided into 512×512 tile sizes, approximately 150 million tiles are
-generated. With annual flights conducting monthly surveys, this produces
-12 × 150M tiles, resulting in 1.8 billion images per year.
+The area monitored spans 10,000 km × 1 km, totaling 10,000 km². At 0.5m resolution, this coverage area translates to 40 billion pixels. When divided into 512×512 tile sizes, approximately 150 million tiles are generated. With annual flights conducting monthly surveys, this produces 12 × 150M tiles, resulting in 1.8 billion images per year.
 
-Even at 10 seconds per image review, that's 50,000 hours of analyst time
-annually ---impossible to sustain.
+Even at 10 seconds per image review, that's 50,000 hours of analyst time annually ---impossible to sustain.
 
 ### Traditional Approaches Fail at Scale
-Manual review relies on pilots scanning during flight and flagging
-approximately 1% of imagery for detailed review. This approach misses
-subtle changes such as corrosion, small leaks, and early vegetation
-encroachment. Without systematic comparison to historical baselines, the
-process remains subjective and inconsistent across different operators.
+Manual review relies on pilots scanning during flight and flagging approximately 1% of imagery for detailed review. This approach misses subtle changes such as corrosion, small leaks, and early vegetation encroachment. Without systematic comparison to historical baselines, the process remains subjective and inconsistent across different operators.
 
-Object detection systems like YOLO and Faster R-CNN require 1,000 to
-10,000 labeled examples per class. These models prove brittle to
-lighting, angle, and resolution changes. They only detect known classes
-and cannot find "unusual but unlabeled" anomalies that fall outside
-their training data.
+Object detection systems like YOLO and Faster R-CNN require 1,000 to 10,000 labeled examples per class. These models prove brittle to lighting, angle, and resolution changes. They only detect known classes and cannot find "unusual but unlabeled" anomalies that fall outside their training data.
 
-Self-supervised anomaly detection offers a different approach. These
-systems learn visual representations without labels and detect anything
-statistically unusual. They adapt to corridor-specific baselines
-automatically and scale to millions of images with distributed compute
-infrastructure.
+Self-supervised anomaly detection offers a different approach. These systems learn visual representations without labels and detect anything statistically unusual. They adapt to corridor-specific baselines automatically and scale to millions of images with distributed compute infrastructure.
 
 ### DINOv2: Self-Supervised Vision Transformers
-DINOv2 uses Vision Transformer (ViT) architecture. The model accepts
-224×224 RGB images as input and divides them into 16×16 patches. An
-encoder consisting of 12 transformer layers (ViT-S/14) with
-self-attention processes these patches. The output is a 384-dimensional
-embedding per image, extracted from the global CLS token. Pre-training
-uses self-distillation, where a student network learns to match teacher
-network predictions on augmented views of the same image, forcing the
-model to learn invariant representations.
+DINOv2 uses Vision Transformer (ViT) architecture. The model accepts 224×224 RGB images as input and divides them into 16×16 patches. An encoder consisting of 12 transformer layers (ViT-S/14) with self-attention processes these patches. The output is a 384-dimensional embedding per image, extracted from the global CLS token. Pre-training uses self-distillation, where a student network learns to match teacher network predictions on augmented views of the same image, forcing the model to learn invariant representations.
 
 ### Why DINOv2 for Infrastructure
-DINOv2 excels at generalization because it was trained on 142M images
-spanning natural and man-made scenes. The model generalizes to
-industrial imagery despite never seeing pipelines, power lines, or
-mining equipment during training.
+DINOv2 excels at generalization because it was trained on 142M images spanning natural and man-made scenes. The model generalizes to industrial imagery despite never seeing pipelines, power lines, or mining equipment during training.
 
-The semantic clustering capabilities mean that similar visual content
-produces similar embeddings. Power line towers cluster together,
-vegetation patterns cluster together, and excavation sites cluster
-together --- --- all without explicit supervision.
+The semantic clustering capabilities mean that similar visual content produces similar embeddings. Power line towers cluster together, vegetation patterns cluster together, and excavation sites cluster together --- --- all without explicit supervision.
 
-For anomaly detection, distance in embedding space correlates with
-visual dissimilarity. Images far from cluster centroids represent
-unusual patterns: corrosion appears as different texture than clean
-metal, encroachment manifests as equipment or structures where baseline
-shows vegetation, and damage emerges as geometric discontinuities.
+For anomaly detection, distance in embedding space correlates with visual dissimilarity. Images far from cluster centroids represent unusual patterns: corrosion appears as different texture than clean metal, encroachment manifests as equipment or structures where baseline shows vegetation, and damage emerges as geometric discontinuities.
 
 ### Key Takeaways
-Zero-shot anomaly detection eliminates the need for labeling. DINOv2,
-pre-trained on 142M images, detects infrastructure anomalies without
-pipeline-specific training data. The clustering approach scales to
-millions of images, with Spark MLlib K-means processing 10,000
-embeddings in seconds and scaling linearly to continental infrastructure
-networks.
+Zero-shot anomaly detection eliminates the need for labeling. DINOv2, pre-trained on 142M images, detects infrastructure anomalies without pipeline-specific training data. The clustering approach scales to millions of images, with Spark MLlib K-means processing 10,000 embeddings in seconds and scaling linearly to continental infrastructure networks.
 
-Review workload can be reduced by 98%. Inspecting the top 200 anomalies
-(2%) versus all 10,000 total images captures 70--80% of actual incidents
-including corrosion, encroachment, and damage. Self-supervised features
-generalize across infrastructure types, meaning the same DINOv2 pipeline
-works for pipelines, power lines, railways, and mining roads without
-retraining.
+Review workload can be reduced by 98%. Inspecting the top 200 anomalies (2%) versus all 10,000 total images captures 70--80% of actual incidents including corrosion, encroachment, and damage. Self-supervised features generalize across infrastructure types, meaning the same DINOv2 pipeline works for pipelines, power lines, railways, and mining roads without retraining.
 
-Databricks integrates vision, geospatial, and analytics capabilities.
-Unity Catalog handles image storage, GPU clusters perform inference,
-MLlib executes clustering, and Mosaic provides spatial visualization.
-The cost-effectiveness versus manual review is compelling: automated
-screening at \$0.01 per image compute cost versus \$2--5 per image for
-human review enables daily versus quarterly coverage.
+Databricks integrates vision, geospatial, and analytics capabilities. Unity Catalog handles image storage, GPU clusters perform inference, MLlib executes clustering, and Mosaic provides spatial visualization. The cost-effectiveness versus manual review is compelling: automated screening at \$0.01 per image compute cost versus \$2--5 per image for human review enables daily versus quarterly coverage.
 
 ### So what?
-DINOv2 + Databricks transforms infrastructure inspection from
-sampling-based review to systematic anomaly detection. Self-supervised
-embeddings capture visual patterns without labels, K-means clustering
-separates normal from abnormal in 384-dimensional space, and
-distance-to-centroid ranking surfaces the 1--2% of images that warrant
-human inspection.
+DINOv2 + Databricks transforms infrastructure inspection from sampling-based review to systematic anomaly detection. Self-supervised embeddings capture visual patterns without labels, K-means clustering separates normal from abnormal in 384-dimensional space, and distance-to-centroid ranking surfaces the 1--2% of images that warrant human inspection.
 
-This implementation processes 10,000 images (100km corridor) in under 30
-minutes on GPU clusters, flagging 200 highest-anomaly tiles for review.
-The architecture scales to continental networks: 1 million images
-processable in hours on modest Databricks infrastructure at \$0.01/image
-compute cost vs \$2--5/image for human review.
+This implementation processes 10,000 images (100km corridor) in under 30 minutes on GPU clusters, flagging 200 highest-anomaly tiles for review. The architecture scales to continental networks: 1 million images processable in hours on modest Databricks infrastructure at \$0.01/image compute cost vs \$2--5/image for human review.
 
-The economics enable frequency increases: monthly aerial patrol → weekly
-drone surveys → daily satellite monitoring. Detection lag drops from
-15--30 days to 24 hours. The safety case is compelling: finding
-corrosion, encroachment, or damage before failure instead of during
-incident investigation.
+The economics enable frequency increases: monthly aerial patrol → weekly drone surveys → daily satellite monitoring. Detection lag drops from 15--30 days to 24 hours. The safety case is compelling: finding corrosion, encroachment, or damage before failure instead of during incident investigation.
 
 ### Production Deployment
 ```python
@@ -857,10 +781,3 @@ Geographic Distribution:
 Pipeline complete! Review inspection worklist.
 ======================================================================
 ```
-::::::::By [Kyle Jones](https://medium.com/@kyle-t-jones) on
-[November 6, 2025](https://medium.com/p/362dfccd288d).
-
-[Canonical
-link](https://medium.com/@kyle-t-jones/inspection-infrastructure-for-anomalies-in-aerial-images-with-dinov2-362dfccd288d)
-
-Exported from [Medium](https://medium.com) on November 10, 2025.

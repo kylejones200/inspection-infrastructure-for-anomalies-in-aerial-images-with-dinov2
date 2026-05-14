@@ -1,7 +1,7 @@
 # Inspection Infrastructure for Anomalies in Aerial Images with DINOv2
 
-**Published:** 2025-11-06
-**Medium:** [https://medium.com/@kyle-t-jones/inspection-infrastructure-for-anomalies-in-aerial-images-with-dinov2-362dfccd288d](https://medium.com/@kyle-t-jones/inspection-infrastructure-for-anomalies-in-aerial-images-with-dinov2-362dfccd288d)
+Published: 2025-11-06
+Medium: [https://medium.com/@kyle-t-jones/inspection-infrastructure-for-anomalies-in-aerial-images-with-dinov2-362dfccd288d](https://medium.com/@kyle-t-jones/inspection-infrastructure-for-anomalies-in-aerial-images-with-dinov2-362dfccd288d)
 
 ## About
 

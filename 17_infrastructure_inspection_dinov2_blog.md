@@ -38,21 +38,17 @@ Pre-training uses self-distillation: student network learns to match teacher net
 
 ### Why DINOv2 for Infrastructure
 
-**Generalization:**
-Trained on 142M images spanning natural and man-made scenes, DINOv2 generalizes to industrial imagery despite never seeing pipelines, power lines, or mining equipment during training.
+Generalization:Trained on 142M images spanning natural and man-made scenes, DINOv2 generalizes to industrial imagery despite never seeing pipelines, power lines, or mining equipment during training.
 
-**Semantic Clustering:**
-Similar visual content produces similar embeddings. Power line towers cluster together, vegetation patterns cluster together, excavation sites cluster together—without explicit supervision.
+Semantic Clustering:Similar visual content produces similar embeddings. Power line towers cluster together, vegetation patterns cluster together, excavation sites cluster together—without explicit supervision.
 
-**Anomaly Detection:**
-Distance in embedding space correlates with visual dissimilarity. Images far from cluster centroids represent unusual patterns: corrosion (different texture than clean metal), encroachment (equipment/structures where baseline shows vegetation), damage (geometric discontinuities).
+Anomaly Detection:Distance in embedding space correlates with visual dissimilarity. Images far from cluster centroids represent unusual patterns: corrosion (different texture than clean metal), encroachment (equipment/structures where baseline shows vegetation), damage (geometric discontinuities).
 
 ## Implementation: Databricks + DINOv2 + MLlib
 
 ### Step 1: Environment and Data Ingestion
 
-**Output:**
-```
+Output:```
 ======================================================================
 INFRASTRUCTURE INSPECTION - DINOV2 ANOMALY DETECTION
 ======================================================================
@@ -158,15 +154,14 @@ You can use Delta Live Tables for incremental ETL, Unity Catalog for image gover
 
 ---
 
-**Technology:** Databricks, DINOv2 (Meta AI), PySpark MLlib, Delta Lake, Unity Catalog, Mosaic  
-**Model:** DINOv2-ViTS/14 (384-dim, 21M params, pre-trained on 142M images, zero-shot)  
-**Scale:** 10,000 images/segment, 1M+ images/network, <30 min processing on GPU cluster  
-**Performance:** 98% review workload reduction, 70-80% recall on actual anomalies  
-**Cost:** $0.01/image compute vs $2-5/image manual review  
-**Detection:** Top 2% flagged captures 75-80% of corrosion/encroachment/damage incidents
+Technology: Databricks, DINOv2 (Meta AI), PySpark MLlib, Delta Lake, Unity Catalog, Mosaic  
+Model: DINOv2-ViTS/14 (384-dim, 21M params, pre-trained on 142M images, zero-shot)  
+Scale: 10,000 images/segment, 1M+ images/network, <30 min processing on GPU cluster  
+Performance: 98% review workload reduction, 70-80% recall on actual anomalies  
+Cost: $0.01/image compute vs $2-5/image manual review  
+Detection: Top 2% flagged captures 75-80% of corrosion/encroachment/damage incidents
 
-**Output:**
-```
+Output:```
 Infrastructure Inspection Pipeline Initialized:
   Spark version: 3.5.0
   PyTorch version: 2.1.0

@@ -59,25 +59,25 @@ def generate_embeddings_with_structure(n_images=10000):
     # Normal infrastructure (cluster 0)
     normal_center = np.zeros(384)
     normal_embeddings = np.random.randn(n_normal, 384) * 0.3 + normal_center
-    embeddings.append(normal_embeddings)
+    pd.concat([embeddings, normal_embeddings])
     labels.extend([0] * n_normal)
     
     # Vegetation intrusion (cluster 1)
     vegetation_center = np.ones(384) * 0.5
     vegetation_embeddings = np.random.randn(n_vegetation, 384) * 0.4 + vegetation_center
-    embeddings.append(vegetation_embeddings)
+    pd.concat([embeddings, vegetation_embeddings])
     labels.extend([1] * n_vegetation)
     
     # Equipment/activity (outliers, cluster 2)
     equipment_center = np.ones(384) * 1.5
     equipment_embeddings = np.random.randn(n_equipment, 384) * 0.8 + equipment_center
-    embeddings.append(equipment_embeddings)
+    pd.concat([embeddings, equipment_embeddings])
     labels.extend([2] * n_equipment)
     
     # Surface damage (outliers, cluster 3)
     damage_center = np.ones(384) * -1.0
     damage_embeddings = np.random.randn(n_damage, 384) * 0.6 + damage_center
-    embeddings.append(damage_embeddings)
+    pd.concat([embeddings, damage_embeddings])
     labels.extend([3] * n_damage)
     
     # Concatenate all

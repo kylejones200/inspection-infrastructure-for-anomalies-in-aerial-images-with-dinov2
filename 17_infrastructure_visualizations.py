@@ -356,9 +356,7 @@ def create_performance_metrics_visualization(plot: bool = False):
 def main():
     """Generate all visualizations for Blog 17."""
     set_tufte_defaults()
-    logger.info("="*70)
     logger.info("Blog 17: Infrastructure Inspection - DINOv2 Visualizations")
-    logger.info("="*70)
     logger.info()
     
     create_main_visualization()
@@ -366,9 +364,7 @@ def main():
     create_performance_metrics_visualization()
     
     logger.info()
-    logger.info("="*70)
     logger.info("All visualizations generated successfully!")
-    logger.info("="*70)
     logger.info()
     logger.info("Files created:")
     logger.info("  - 17_infrastructure_inspection_dinov2_main.png")

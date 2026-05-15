@@ -439,9 +439,8 @@ def store_embeddings_silver(spark, embeddings, catalog_path):
     print(f"  Embedding dimension: {len(embeddings[0][1])}")
     
     return df
-```
 
-``` 
+
 Step 3: Clustering and Anomaly Detection
 ```
 

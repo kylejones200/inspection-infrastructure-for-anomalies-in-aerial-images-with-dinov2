@@ -1,6 +1,4 @@
 import signalplot
-import sys
-import os
 
 import logging
 logging.basicConfig(
@@ -17,11 +15,9 @@ Creates minimalist-style visualizations of embedding space and anomaly detection
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.manifold import TSNE
-from sklearn.decomposition import PCA
 
 
 
-from pathlib import Path
 
 def apply_minimalist_style_manual(ax):
     """Apply minimalist style components manually to axis."""
@@ -186,7 +182,7 @@ def create_main_visualization(plot: bool = False):
                     dpi=300, bbox_inches='tight')
         plt.close()
     
-    logger.info(f"✓ Main visualization saved")
+    logger.info("✓ Main visualization saved")
     logger.info(f"  t-SNE projection with {n_outliers} outliers flagged")
 
 def create_anomaly_distribution_visualization(plot: bool = False):
@@ -258,14 +254,14 @@ def create_anomaly_distribution_visualization(plot: bool = False):
                 f'Flagged: {n_outliers} ({n_outliers/len(anomaly_scores)*100:.2f}%)',
                 transform=ax.transAxes, fontsize=9,
                 verticalalignment='top', horizontalalignment='right',
-                bbox=dict(boxstyle='round', facecolor='white', edgecolor='black', linewidth=1))
+                bbox={'boxstyle': 'round', 'facecolor': 'white', 'edgecolor': 'black', 'linewidth': 1})
     
         plt.tight_layout()
         plt.savefig('/Users/k.jones/Desktop/blogs/blog_posts/17_infrastructure_anomaly_distribution.png', 
                     dpi=300, bbox_inches='tight')
         plt.close()
     
-    logger.info(f"✓ Anomaly distribution visualization saved")
+    logger.info("✓ Anomaly distribution visualization saved")
 
 def create_performance_metrics_visualization(plot: bool = False):
     """
@@ -335,7 +331,7 @@ def create_performance_metrics_visualization(plot: bool = False):
                     dpi=300, bbox_inches='tight')
         plt.close()
     
-    logger.info(f"✓ Performance metrics visualization saved")
+    logger.info("✓ Performance metrics visualization saved")
 
 def main():
     """Generate all visualizations for Blog 17."""

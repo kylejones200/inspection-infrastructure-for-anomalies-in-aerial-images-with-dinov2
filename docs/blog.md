@@ -6,7 +6,7 @@ DINOv2 from Meta AI was trained on 142 million images without a single label. It
 
 This implementation runs on Databricks with Unity Catalog, PySpark MLlib, and Mosaic visualization—processing 100,000 images in hours on GPU clusters, clustering embeddings at scale, and surfacing the top 1% of outliers for human inspection. No labels. No training. Just anomaly detection at continental infrastructure scale.
 
-![Infrastructure Anomaly Detection](17_infrastructure_inspection_dinov2_main.png)
+![Infrastructure Anomaly Detection](../outputs/figures/infrastructure_embeddings_tsne.png)
 
 *t-SNE projection of DINOv2 embeddings from 10,000 pipeline corridor aerial images. Normal infrastructure (gray), vegetation intrusion (green), equipment/activity (red), and surface damage (orange) naturally separate in embedding space. Distance to cluster centroid provides anomaly score; top 200 outliers (>3σ) flagged for inspection capture 78% of actual incidents while reviewing 2% of imagery.*
 

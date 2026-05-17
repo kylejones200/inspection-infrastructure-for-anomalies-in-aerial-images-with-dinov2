@@ -1,0 +1,29 @@
+logging:
+  level: INFO
+
+data:
+  n_images: 10000
+  embedding_dim: 384
+  seed: 42
+  class_fractions:
+    normal: 0.94
+    vegetation: 0.03
+    equipment: 0.02
+    # damage receives the remainder
+
+visualization:
+  tsne:
+    perplexity: 30
+    max_iter: 1000
+  anomaly_threshold_sigma: 3
+
+output:
+  figures_dir: outputs/figures
+  save_figures: true
+  figure_dpi: 300
+  main_figure: infrastructure_embeddings_tsne.png
+  distribution_figure: anomaly_score_distribution.png
+  performance_figure: review_workload_metrics.png
+
+style:
+  font_family: serif

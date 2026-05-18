@@ -5,6 +5,14 @@ Medium: [Inspection Infrastructure for Anomalies in Aerial Images with DINOv2](h
 
 Companion code for the article (`article.md`). Generates synthetic DINOv2-style embedding visualizations (t-SNE map, anomaly score distribution, and review-workload metrics) that illustrate zero-shot anomaly detection at infrastructure scale.
 
+## Business context
+
+Infrastructure operators --- pipelines, power lines, railways, mining haul roads--- collect millions of aerial images annually from drones, helicopters, and satellites. The collection rate exceeds review capacity by a factor of 100. Traditional computer vision requires labeled training data: thousands of images manually annotated with "corrosion," "vegetation encroachment," "equipment present," "surface damage."
+
+I wanted to see if self-supervised models like DINOv2 (Distillation with NO labels v2) could eliminate this bottleneck by learning visual representations from unlabeled data, then detecting anomalies as deviations from learned normal patterns.
+
+DINOv2 is a computer vision model from Meta AI trained on 142 million unlabeled images. It learns that power line towers look similar to each other, vegetation has consistent texture patterns, bare ground differs from disturbed soil, and construction equipment stands out against infrastructure backgrounds. When deployed on operational imagery, embeddings from normal scenes cluster tightly; anomalies--- corrosion, encroachment, damage, unauthorized activity --- appear as outliers in 384-dimensional embedding space.
+
 ## Quick start
 
 Requires [uv](https://docs.astral.sh/uv/).

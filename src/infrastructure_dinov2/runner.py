@@ -36,13 +36,10 @@ def main(argv: list[str] | None = None) -> int:
         help="Path to config.yaml (default: repo config.yaml)",
     )
     args = parser.parse_args(argv)
-
     config = load_config(args.config)
     _configure_logging(config.logging_level)
     logger = logging.getLogger(__name__)
-
     signalplot.apply(font_family=config.font_family)
-
     logger.info("Infrastructure inspection — DINOv2 visualizations")
     paths = [
         create_main_visualization(config),
@@ -50,7 +47,6 @@ def main(argv: list[str] | None = None) -> int:
         create_performance_metrics_visualization(config),
     ]
     saved = [p for p in paths if p is not None]
-
     if saved:
         logger.info("Wrote %s figure(s) to %s", len(saved), config.output.figures_dir)
         for path in saved:

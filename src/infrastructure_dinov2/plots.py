@@ -56,9 +56,7 @@ def _anomaly_threshold(anomaly_scores: np.ndarray, sigma: float) -> float:
 def create_main_visualization(config: AppConfig) -> Path | None:
     """t-SNE projection of synthetic DINOv2 embeddings with outlier highlighting."""
     logger.info("Generating main visualization...")
-
     embeddings, labels, anomaly_scores = generate_embeddings_with_structure(config.data)
-
     logger.info("  Running t-SNE dimensionality reduction...")
     tsne = TSNE(
         n_components=2,
@@ -67,17 +65,14 @@ def create_main_visualization(config: AppConfig) -> Path | None:
         max_iter=config.tsne.max_iter,
     )
     embeddings_2d = tsne.fit_transform(embeddings)
-
     threshold = _anomaly_threshold(anomaly_scores, config.anomaly_threshold_sigma)
     outlier_mask = anomaly_scores > threshold
     n_outliers = int(np.sum(outlier_mask))
-
     if not config.output.save_figures:
         logger.info("  Skipping save (save_figures=false); %s outliers flagged", n_outliers)
         return None
 
     fig, ax = plt.subplots(figsize=(10, 8))
-
     for class_id in (LABEL_NORMAL, LABEL_VEGETATION, LABEL_EQUIPMENT, LABEL_DAMAGE):
         mask = labels == class_id
         ax.scatter(
@@ -101,7 +96,6 @@ def create_main_visualization(config: AppConfig) -> Path | None:
         linewidths=2,
         label=f"Flagged for Inspection (n={n_outliers}, >{config.anomaly_threshold_sigma:.0f}σ)",
     )
-
     apply_minimalist_style(ax)
     ax.set_xlabel("t-SNE Dimension 1", fontsize=10)
     ax.set_ylabel("t-SNE Dimension 2", fontsize=10)
@@ -124,12 +118,10 @@ def create_main_visualization(config: AppConfig) -> Path | None:
         verticalalignment="bottom",
         color="black",
     )
-
     out_path = _figures_dir(config) / config.output.main_figure
     fig.tight_layout()
     fig.savefig(out_path, dpi=config.output.figure_dpi, bbox_inches="tight")
     plt.close(fig)
-
     logger.info("  Saved %s (%s outliers flagged)", out_path.name, n_outliers)
     return out_path
 
@@ -137,18 +129,14 @@ def create_main_visualization(config: AppConfig) -> Path | None:
 def create_anomaly_distribution_visualization(config: AppConfig) -> Path | None:
     """Histogram of anomaly scores with μ + kσ threshold."""
     logger.info("Generating anomaly distribution visualization...")
-
     _embeddings, labels, anomaly_scores = generate_embeddings_with_structure(config.data)
-
     mean_score = float(np.mean(anomaly_scores))
     std_score = float(np.std(anomaly_scores))
     threshold = mean_score + config.anomaly_threshold_sigma * std_score
-
     if not config.output.save_figures:
         return None
 
     fig, ax = plt.subplots(figsize=(10, 6))
-
     for class_id in (LABEL_NORMAL, LABEL_VEGETATION, LABEL_EQUIPMENT, LABEL_DAMAGE):
         mask = labels == class_id
         ax.hist(
@@ -175,7 +163,6 @@ def create_anomaly_distribution_visualization(config: AppConfig) -> Path | None:
         linewidth=1.5,
         label=f"Mean = {mean_score:.2f}",
     )
-
     apply_minimalist_style(ax)
     ax.set_xlabel("Anomaly Score (Distance to Cluster Centroid)", fontsize=10)
     ax.set_ylabel("Number of Images", fontsize=10)
@@ -187,7 +174,6 @@ def create_anomaly_distribution_visualization(config: AppConfig) -> Path | None:
         pad=20,
     )
     ax.legend(loc="upper right", frameon=False, fontsize=9)
-
     n_outliers = int(np.sum(anomaly_scores > threshold))
     ax.text(
         0.98,
@@ -208,12 +194,10 @@ def create_anomaly_distribution_visualization(config: AppConfig) -> Path | None:
             "linewidth": 1,
         },
     )
-
     out_path = _figures_dir(config) / config.output.distribution_figure
     fig.tight_layout()
     fig.savefig(out_path, dpi=config.output.figure_dpi, bbox_inches="tight")
     plt.close(fig)
-
     logger.info("  Saved %s", out_path.name)
     return out_path
 
@@ -221,12 +205,10 @@ def create_anomaly_distribution_visualization(config: AppConfig) -> Path | None:
 def create_performance_metrics_visualization(config: AppConfig) -> Path | None:
     """Bar charts for review workload reduction and detection performance."""
     logger.info("Generating performance metrics visualization...")
-
     if not config.output.save_figures:
         return None
 
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
-
     scenarios = [
         "Manual\nReview\n(100%)",
         "Pilot\nFlagging\n(~5%)",
@@ -234,7 +216,6 @@ def create_performance_metrics_visualization(config: AppConfig) -> Path | None:
     ]
     review_pct = [100, 5, 2]
     colors_workload = ["#FF4136", "#FF851B", "#2ECC40"]
-
     bars1 = ax1.bar(
         scenarios,
         review_pct,
@@ -275,11 +256,9 @@ def create_performance_metrics_visualization(config: AppConfig) -> Path | None:
         style="italic",
         color="black",
     )
-
     metrics = ["Anomaly\nRecall", "False\nPositive\nRate", "Review\nWorkload"]
     values = [78, 22, 2]
     colors_perf = ["#2ECC40", "#FF4136", "#0074D9"]
-
     bars2 = ax2.bar(metrics, values, color=colors_perf, edgecolor="black", linewidth=1.5)
     for bar in bars2:
         height = bar.get_height()
@@ -314,11 +293,9 @@ def create_performance_metrics_visualization(config: AppConfig) -> Path | None:
         style="italic",
         color="black",
     )
-
     out_path = _figures_dir(config) / config.output.performance_figure
     fig.tight_layout()
     fig.savefig(out_path, dpi=config.output.figure_dpi, bbox_inches="tight")
     plt.close(fig)
-
     logger.info("  Saved %s", out_path.name)
     return out_path

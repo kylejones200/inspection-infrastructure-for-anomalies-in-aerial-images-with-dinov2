@@ -45,13 +45,11 @@ def generate_embeddings_with_structure(
 ) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
     """
     Generate synthetic embeddings with realistic cluster structure.
-
     Simulates DINOv2 embeddings:
     - ~94% normal infrastructure (tight cluster)
     - ~3% vegetation intrusion
     - ~2% equipment/activity
     - remainder surface damage
-
     Returns:
         embeddings: (n_images, embedding_dim)
         labels: int array (0=normal, 1=vegetation, 2=equipment, 3=damage)
@@ -67,10 +65,8 @@ def generate_embeddings_with_structure(
 
     rng = np.random.default_rng(seed)
     counts = class_counts(n_images, class_fractions)
-
     embeddings_parts: list[np.ndarray] = []
     labels: list[int] = []
-
     for label_id, count in enumerate(counts):
         center = _center_for_dim(CLASS_CENTERS[label_id], embedding_dim)
         scale = CLASS_SCALES[label_id]
@@ -80,12 +76,10 @@ def generate_embeddings_with_structure(
 
     embeddings = np.vstack(embeddings_parts)
     labels_arr = np.array(labels, dtype=np.int64)
-
     centers = {label_id: _center_for_dim(c, embedding_dim) for label_id, c in CLASS_CENTERS.items()}
     anomaly_scores = np.array(
         [np.linalg.norm(embeddings[i] - centers[int(label)]) for i, label in enumerate(labels_arr)]
     )
-
     return embeddings, labels_arr, anomaly_scores
 
 

@@ -60,7 +60,6 @@ def load_config(path: Path | None = None) -> AppConfig:
     viz_raw = _require(raw, "visualization")
     output_raw = _require(raw, "output")
     style_raw = raw.get("style", {})
-
     return AppConfig(
         logging_level=raw.get("logging", {}).get("level", "INFO"),
         data=DataConfig(

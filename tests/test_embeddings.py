@@ -29,7 +29,6 @@ def test_generate_embeddings_shape_and_labels():
         class_fractions={"normal": 0.94, "vegetation": 0.03, "equipment": 0.02},
     )
     embeddings, labels, scores = generate_embeddings_with_structure(data)
-
     assert embeddings.shape == (500, 64)
     assert labels.shape == (500,)
     assert scores.shape == (500,)
